@@ -349,3 +349,21 @@ Os comandos SQL e os objetos das relações (i.e. <NomeTabelas>, <NomeCampos> ..
 	ex: 
 		<TABELA> e <tabela> se referem a mesma relação.
 		<INSERT> e <insert> se referem ao mesmo comando SQL.
+		
+
+##############LEIA-ME PARTE 5 #############################################################################################################
+
+=> 26 de novembro de 2015 <=
+
+Universidade Federal da Fronteira Sul – UFFS
+Curso: Ciência da Computação
+Componente Curricular: Banco de Dados II
+Professor: Dr. Denio Duarte
+Aluno: Guilherme Antunes da Silva.
+=============================================================================================================================================
+Foi alterada o comando select para permitir a cláusula where, contudo:
+*Ainda não há projeções
+*Não colocar asterisco se for usar where. Mas se for select sem where, colocar asterisco.
+*Não use valores numéricos. ex: select where t.e>=2;
+
+Problemas graves, mas que estão sendo corrigidos.
