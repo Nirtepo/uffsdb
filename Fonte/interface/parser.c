@@ -247,6 +247,9 @@ int interface() {
                         case OP_SELECT_ALL:
                             imprime(GLOBAL_DATA.objName);
                             break;
+                        case OP_SELECT:
+			    imprimese(GLOBAL_DATA.objName, GLOBAL_DATA.type);
+			    break;
                         case OP_CREATE_TABLE:
                             createTable(&GLOBAL_DATA);
                             break;
