@@ -47,6 +47,11 @@ void setObjName(char **nome) {
     } else
         return;
 }
+void setObjType(char **type) {
+	GLOBAL_DATA.type = malloc(sizeof(char)*((strlen(*type)+1)));
+        strcpylower(GLOBAL_DATA.type, *type);
+        GLOBAL_DATA.type[strlen(*type)] = '\0';
+}
 
 void setColumnInsert(char **nome) {
     GLOBAL_DATA.columnName = realloc(GLOBAL_DATA.columnName, (GLOBAL_PARSER.col_count+1)*sizeof(char *));
