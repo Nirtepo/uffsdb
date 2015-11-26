@@ -30,7 +30,7 @@ int yywrap() {
         CHAR        PRIMARY     KEY         REFERENCES  DATABASE
         DROP        OBJECT      NUMBER      VALUE       QUIT
         LIST_TABLES LIST_TABLE  ALPHANUM    CONNECT     HELP
-        LIST_DBASES CLEAR;
+        LIST_DBASES CLEAR	WHERE	    EXPRESSION;
 
 start: insert | select | create_table | create_database | drop_table | drop_database
      | table_attr | list_tables | connection | exit_program | semicolon {GLOBAL_PARSER.consoleFlag = 1; return 0;}
@@ -151,6 +151,7 @@ drop_database: DROP DATABASE {setMode(OP_DROP_DATABASE);} OBJECT {setObjName(yyt
 
 /* SELECT */
 select: SELECT {setMode(OP_SELECT_ALL);} '*' FROM table_select semicolon {return 0;};
+ 	| SELECT {setMode(OP_SELECT);} FROM table_select WHERE EXPRESSION {setObjType(yytext);} semicolon {return 0;};
 
 table_select: OBJECT {setObjName(yytext);};
 
