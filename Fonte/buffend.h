@@ -317,6 +317,8 @@ void imprime(char nomeTabela[] );
     Retorno:    void.
    ---------------------------------------------------------------------------------------------*/
 
+void imprimese(char nomeTabela[], char type[]);
+
 int excluirTabela(char *nomeTabela);
 /* ----------------------------------------------------------------------------------------------
     Objetivo:   Função para exclusão de tabelas.
