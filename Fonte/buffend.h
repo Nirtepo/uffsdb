@@ -21,6 +21,12 @@ struct fs_objects { // Estrutura usada para carregar fs_objects.dat
     int qtdCampos;                      // Quantidade de campos da tabela.
 };
 
+typedef struct clauses {//Usada para a cláusula where, no arquivo imprime.c
+	char * attr1, *tab1, * attr2, *tab2;
+	int comp;//0 =, 1 !=, 2 >, 3 <, 4 >=, 5 <=, +0 or, +10 and 
+	struct clauses *next;
+}clauses;
+
 typedef struct tp_table{ // Estrutura usada para carregar fs_schema.dat
     char nome[TAMANHO_NOME_CAMPO];  // Nome do Campo.                    40bytes
     char tipo;                      // Tipo do Campo.                     1bytes
@@ -519,4 +525,55 @@ int compDtoD(double a, double b);
 double doubAbs(double n);
 /*
 * Retorna o valor absoluto de uma variável double;
+*/
+
+void clauses_clear(struct clauses *str);
+/*
+*Limpa toda a estrutura de um clauses
+*/
+int clauses_get(char type[], struct clauses ** claus);
+/*
+*Preenche uma estrutura do tipo clauses com o conteúdo de uma string do tipo CLAUSE.
+ex: op>2 and abra.c<=r.rio;S
+*/
+
+void clauses_add(struct clauses **str, char *tp1, char *tb1, char *tp2, char *tb2, int op);
+/*
+*Adiciona uma clausúla nova em str com os valores elencados nas demais variáveis.
+*Se str==NULL, cria uma nova estrutura e adiciona os valores mencionados.
+*/
+
+char * substring(char type[], int from, int to);
+/*
+* Cria uma substring do caracter from até o caracter to e remove
+* todos os espaços em branco, chamando a função rmvwhitespaces.
+*/
+
+void rmvwhitespaces(char **type);
+/*
+* Remove todos os espaços em branco da string recebida.
+*/
+
+int clauses_check(struct clauses *claus, char * table);
+/*
+* Verifica em uma estrutura clauses se o nome das tabelas utilizadas são válidos.
+*/
+
+//char* strdepoint(char **c1);
+
+int checkPageLine(column * page, struct fs_objects *objeto, tp_buffer *bufferpool, struct clauses * claus, int p);
+/*
+* Testa a cláusula WHERE, guardada na estrutura clauses, para decidir se a linha p da página deve ser exibida.
+  Retorna 1 para sim e 0 para não.
+*/
+
+column * getOnPageLine(column * page, struct fs_objects *objeto, tp_buffer *bufferpool, char * attr, int n);
+/*
+*  Procura pelo atributo na tabela em questão e retorna o seu valor.
+*/
+int generalCmp(char *a, char *b, char t, int comp);
+/*
+* Faz uma comparação genérica entre tipos I, D, C e S, retornando 1 para sim e 0 para não.
+* O tipo da comparação é definida em comp, pelo número correspondente. Essa numeração
+* pode ser conferida no cabeçalho deste arquivo, na definição da struct clauses.
 */
