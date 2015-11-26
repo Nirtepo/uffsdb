@@ -55,6 +55,11 @@ void setObjName(char **nome);
 /* Adiciona na estrutura uma nova coluna identificada no
  * comando INSERT.
  */
+void setObjType(char **nome);
+/*
+*Utilizado como container para expressões da cláusula where. A ideia é reaproveitar o campo
+*type, que nesse momento, fica em desuso.
+*/
 void setColumnInsert(char **nome);
 
 /* Define o valor que será inserido, identificado no token
