@@ -1,5 +1,6 @@
 //BufferPool
 #include "buffend.h"
+#include <ctype.h>
 
 // FUNCOES AUXILIARES
 int tamTupla(tp_table *esquema, struct fs_objects objeto) {// Retorna o tamanho total da tupla da tabela.
