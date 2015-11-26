@@ -9,7 +9,7 @@
 %option nounput
 
 %%
-
+[ \t]+							/* ignore whitespace */;
 (?i:INSERT)						return INSERT;
 (?i:INTO)						return INTO;
 (?i:VALUES)						return VALUES;
@@ -43,7 +43,7 @@ help							return HELP;
 [\']([^'])+[\']			  		{yylval.strval = yytext; return ALPHANUM;};
 [0-9]*\.[0-9]*					{yylval.strval = yytext; return VALUE;};
 [0-9]+							{yylval.strval = yytext; return NUMBER;}
-
+([a-zA-Z_]+[0-9_]*)+[ ]*[.][ ]*([a-zA-Z_]+[0-9_]*)+[ ]*[!><=][=]*[ ]*([a-zA-Z_]+[0-9_]*)+[ ]*[.][ ]*([a-zA-Z_]+[0-9_]*)+([ ]+[a-zA-Z]++[ ]+([a-zA-Z_]+[0-9_]*)+[ ]*[.][ ]*([a-zA-Z_]+[0-9_]*)+[ ]*[!><=][=]*[ ]*([a-zA-Z_]+[0-9_]*)+[ ]*[.][ ]*([a-zA-Z_]+[0-9_]*)+)*  return EXPRESSION;
 \n								{
 									if (GLOBAL_PARSER.mode != 0) {
 										if (GLOBAL_PARSER.parentesis)
@@ -71,5 +71,5 @@ help							return HELP;
 [\\][t]+						return LIST_TABLE;
 [\\][t]+[^ ^\n]*				{invalidCommand(yytext);};
 [\\][t]+[ ]*[\n]				{invalidCommand("\\t <enter>'. Expecting '\\t TABLENAME"); return 0;};
-[ \t]+							/* ignore whitespace */;
+
 %%
