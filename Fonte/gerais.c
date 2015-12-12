@@ -310,11 +310,12 @@ int clauses_get(char type[], struct clauses ** claus){
             }
 
             else if(type[x] == '\''){
-            	l=x+1;
+            	l=++1;
             	while(type[x] != '\'')
             		x++;
-            	newCl->tab2 = substring("@",0,0);  //  campara-se atributo com strings, @ significa string 
+            	newCl->tab2 = substring("@",0,0);  //  compara-se atributo com strings, @ significa string 
             	newCl->attr2 = substring(type, l, x-1);
+            	x++; //Pula a última apostrofe.
             	while(isspace(type[x]))
                     x++;
 	    }
