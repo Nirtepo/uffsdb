@@ -26,6 +26,7 @@
 (?i:KEY)						return KEY;
 (?i:REFERENCES)					return REFERENCES;
 (?i:DATABASE)					return DATABASE;
+(?i:WHERE)                                              return WHERE;
 (?i:DROP)						return DROP;
 help							return HELP;
 [\\][h]							return HELP;
