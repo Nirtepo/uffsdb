@@ -579,3 +579,5 @@ int generalCmp(char *a, char *b, char t, int comp);
 * O tipo da comparação é definida em comp, pelo número correspondente. Essa numeração
 * pode ser conferida no cabeçalho deste arquivo, na definição da struct clauses.
 */
+int srcnum(char type[], int pos);
+/*Verifica se a posição pos da string representa um numero de 0 a 9, retorna 1 para verdadeiro */
