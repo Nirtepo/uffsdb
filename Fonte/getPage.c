@@ -57,6 +57,7 @@ column * getOnPageLine(column * page, struct fs_objects *objeto, tp_buffer *buff
 
 int checkPageLine(column * page, struct fs_objects *objeto, tp_buffer *bufferpool, struct clauses * claus, int n){
 	column *ret1, *ret2;
+	int *aux1, aux2;
 	while(claus!=NULL){
 		ret1 = getOnPageLine(page, objeto, bufferpool, claus->attr1, n);
 		if(claus->tab2[0]=='$'){
