@@ -377,6 +377,30 @@ char * substring(char type[], int from, int to){
 	
 }
 
+int srcnum(char type[], int pos){ //retorna 1 se char representa numero
+	if(type[pos] == '0')
+		return 1;
+	if(type[pos] == '1')
+		return 1;
+	if(type[pos] == '2')
+		return 1;
+	if(type[pos] == '3')
+		return 1;
+	if(type[pos] == '4')
+		return 1;
+	if(type[pos] == '5')
+		return 1;	
+	if(type[pos] == '6')
+		return 1;
+	if(type[pos] == '7')
+		return 1;
+	if(type[pos] == '8')
+		return 1;
+	if(type[pos] == '9')
+		return 1;
+	return 0;
+}
+
 void rmvwhitespaces(char ** type)
 {
   char* i = *type;
