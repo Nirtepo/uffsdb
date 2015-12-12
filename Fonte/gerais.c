@@ -310,7 +310,7 @@ int clauses_get(char type[], struct clauses ** claus){
             }
 
             else if(type[x] == '\''){
-            	l=++1;
+            	l=++x;
             	while(type[x] != '\'')
             		x++;
             	newCl->tab2 = substring("@",0,0);  //  compara-se atributo com strings, @ significa string 
