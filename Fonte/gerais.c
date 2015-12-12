@@ -297,8 +297,29 @@ int clauses_get(char type[], struct clauses ** claus){
                 x++;
             while(isspace(type[x]))
                 x++;
+                
+            if(srcnum(type, x) == 1){
+            	newCl->tab2 = substring("$",0,0);
+            	l=x;
+            	while(srcnum(type,x))
+            		x++;
+            	newCl->attr2 = substring(type, l, x-1);
+            	while(isspace(type[x]))
+                    x++;
+            }
+
+            else if(type[x] == '\''){
+            	l=x+1;
+            	while(type[x] != '\'')
+            		x++;
+            	newCl->tab2 = substring("@",0,0);  //  campara-se atributo com strings, @ significa string 
+            	newCl->attr2 = substring(type, l, x-1);
+            	while(isspace(type[x]))
+                    x++;
+	    }
+                
             if(type[x]=='.'){
-				newCl->tab2 = substring(type, l,x-1);
+		newCl->tab2 = substring(type, l,x-1);
                 l = ++x;				
                 while(isspace(type[x]))
                     x++;
@@ -307,8 +328,9 @@ int clauses_get(char type[], struct clauses ** claus){
                 if(type[x]!='\0'&&x<strlen(type))
                     while(isspace(type[x]))
                         x++;
+                newCl->attr2 = substring(type, l, x-1);
             }
-            newCl->attr2 = substring(type, l, x-1);
+            
             
             while(isspace(type[x]))
                         x++;
