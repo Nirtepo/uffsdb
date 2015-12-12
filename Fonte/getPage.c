@@ -59,28 +59,62 @@ int checkPageLine(column * page, struct fs_objects *objeto, tp_buffer *bufferpoo
 	column *ret1, *ret2;
 	while(claus!=NULL){
 		ret1 = getOnPageLine(page, objeto, bufferpool, claus->attr1, n);
-		ret2 = getOnPageLine(page, objeto, bufferpool, claus->attr2, n);
-		if(ret1==NULL||ret2==NULL)
-			return 0; 
-		if((ret1->tipoCampo=='D'&&ret2->tipoCampo=='D')||(ret1->tipoCampo=='I'&&ret2->tipoCampo=='D')||(ret1->tipoCampo=='D'&&ret2->tipoCampo=='I')){
-			if(!generalCmp(ret1->valorCampo, ret2->valorCampo, 'D', claus->comp))
-				return 0;		
+		if(claus->tab2[0]=='$'){
+			aux1 = (int *)ret1->valorCampo;
+			aux2 = atoi(claus->attr2);
+			if(claus->comp==0){			
+				if(*aux1!=aux2)
+					return 0;
+			}
+			else if(claus->comp%10==1){
+				if(*aux1==aux2)
+					return 0;
+			}
+			else if(claus->comp%10==2){
+				if(*aux1<=aux2)
+					return 0;
+			}
+			else if(claus->comp%10==3){
+				if(*aux1>=aux2)
+					return 0;
+			}
+			else if(claus->comp%10==4){
+				if(*aux1<aux2)
+					return 0;
+			}
+			else if(claus->comp%10==5){
+				if(*aux1>aux2)
+					return 0;
+			}
 		}
-		else if(ret1->tipoCampo=='I'&&ret2->tipoCampo=='I'){
-			if(!generalCmp(ret1->valorCampo, ret2->valorCampo, 'I', claus->comp))
-				return 0; 
-		}
-		else if(ret1->tipoCampo=='C'&&ret2->tipoCampo=='C'){
-			if(!generalCmp(ret1->valorCampo, ret2->valorCampo, 'C', claus->comp))
-				return 0;
-		}
-		else if(ret1->tipoCampo=='S'&&ret2->tipoCampo=='S'){
-			if(!generalCmp(ret1->valorCampo, ret2->valorCampo, 'S', claus->comp))
+		else if(claus->tab2[0]=='@'){
+			if(!generalCmp(ret1->valorCampo, claus->attr2, 'S', claus->comp))
 				return 0;
 		}
 		else{
-			printf("The attributes '%s'%s and '%s'%s are incompatible", ret1->nomeCampo,(ret2->tipoCampo=='C'? "char" : (ret2->tipoCampo=='I'? "integer":(ret2->tipoCampo=='D'? "double":(ret2->tipoCampo=='S'? "string" : "unknown")))), ret2->nomeCampo, (ret2->tipoCampo=='C'? "char" : (ret2->tipoCampo=='I'? "integer":(ret2->tipoCampo=='D'? "double":(ret2->tipoCampo=='S'? "string" : "unknown")))));			
-			return 0;		
+			ret2 = getOnPageLine(page, objeto, bufferpool, claus->attr2, n);
+			if(ret1==NULL||ret2==NULL)
+				return 0; 
+			if((ret1->tipoCampo=='D'&&ret2->tipoCampo=='D')||(ret1->tipoCampo=='I'&&ret2->tipoCampo=='D')||(ret1->tipoCampo=='D'&&ret2->tipoCampo=='I')){
+				if(!generalCmp(ret1->valorCampo, ret2->valorCampo, 'D', claus->comp))
+					return 0;		
+			}
+			else if(ret1->tipoCampo=='I'&&ret2->tipoCampo=='I'){
+				if(!generalCmp(ret1->valorCampo, ret2->valorCampo, 'I', claus->comp))
+					return 0; 
+			}
+			else if(ret1->tipoCampo=='C'&&ret2->tipoCampo=='C'){
+				if(!generalCmp(ret1->valorCampo, ret2->valorCampo, 'C', claus->comp))
+					return 0;
+			}
+			else if(ret1->tipoCampo=='S'&&ret2->tipoCampo=='S'){
+				if(!generalCmp(ret1->valorCampo, ret2->valorCampo, 'S', claus->comp))
+					return 0;
+			}
+			else{
+				printf("The attributes '%s'%s and '%s'%s are incompatible", ret1->nomeCampo,(ret2->tipoCampo=='C'? "char" : (ret2->tipoCampo=='I'? "integer":(ret2->tipoCampo=='D'? "double":(ret2->tipoCampo=='S'? "string" : "unknown")))), ret2->nomeCampo, (ret2->tipoCampo=='C'? "char" : (ret2->tipoCampo=='I'? "integer":(ret2->tipoCampo=='D'? "double":(ret2->tipoCampo=='S'? "string" : "unknown")))));			
+				return 0;		
+			}
 		}
 		claus = claus->next;
 	}
