@@ -293,7 +293,7 @@ int clauses_get(char type[], struct clauses ** claus){
               Essa expressão também pode ser representada sem ponto " yrwerw "  */
             while(isspace(type[x]))
                 x++;
-            while(type[x]!='\0'&&!isspace(type[x])&&type[x]!='.')
+            while(type[x]!='\0'&&!isspace(type[x])&&type[x]!='.'&&srcnum(type, x) ==0&&type[x] != '\'')
                 x++;
             while(isspace(type[x]))
                 x++;
