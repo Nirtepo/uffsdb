@@ -77,6 +77,7 @@ int compDtoD(double a, double b){
 
 int generalCmp(char *a, char *b, char t, int comp){
 	int x;
+	comp %=10;
 	if(a==NULL||b==NULL||comp>5||comp<0)
 		return -1;	
 	if(t=='I'){
