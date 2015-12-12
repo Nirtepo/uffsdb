@@ -377,10 +377,11 @@ int clauses_check(struct clauses *claus, char * table){
 			printf("The table %s doesn't exist.\n",claus->tab1);
 			return 0;		
 		}
-		if(strcmp(claus->tab2, table)!=0){
-			printf("The table %s doesn't exist.\n",claus->tab2);	
-			return 0;
-		}
+		if(claus->tab2[0]!='$'&&claus->tab2[0]!='@')
+			if(strcmp(claus->tab2, table)!=0){
+				printf("The table %s doesn't exist.\n",claus->tab2);	
+				return 0;
+			}
     	if(claus->next==NULL)
     	    break;
     	else
