@@ -150,7 +150,7 @@ create_database: CREATE DATABASE {setMode(OP_CREATE_DATABASE);} OBJECT {setObjNa
 drop_database: DROP DATABASE {setMode(OP_DROP_DATABASE);} OBJECT {setObjName(yytext);} semicolon {return 0;};
 
 /* SELECT */
-select: SELECT {setMode(OP_SELECT);} asterisk FROM table_select  where_clause semicolon {return 0;} 
+select: SELECT {setMode(OP_SELECT);} asterisk FROM table_select  where_clause semicolon {return 0;}; 
 
 asterisk: '*'|/*optional*/;
 where_clause:  WHERE EXPRESSION {setObjType(yytext);}|/*optional*/;
