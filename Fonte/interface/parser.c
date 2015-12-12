@@ -49,7 +49,7 @@ void setObjName(char **nome) {
 }
 void setObjType(char **type) {
 	GLOBAL_DATA.type = malloc(sizeof(char)*((strlen(*type)+1)));
-        strcpylower(GLOBAL_DATA.type, *type);
+        strcpy(GLOBAL_DATA.type, *type);
         GLOBAL_DATA.type[strlen(*type)] = '\0';
 }
 
