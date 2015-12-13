@@ -156,7 +156,7 @@ select: SELECT {setMode(OP_SELECT);} projection  FROM table_select where_clause 
 asterisk: '*'|/*optional*/;
 where_clause:  WHERE EXPRESSION {setObjType(yytext);}|/*optional*/;
 
-projection: asterisk{GLOBAL_FIELDS=NULL;}|PROJECTION{setGlobalFields(yytext);};
+projection: asterisk{setGlobalFields(NULL);}|PROJECTION{setGlobalFields(yytext);};
 
 table_select: OBJECT {setObjName(yytext);}; 
 
