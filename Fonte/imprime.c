@@ -11,12 +11,9 @@ void imprimese(char nomeTabela[], char type[]){
     struct fs_objects objeto;
     struct clauses *constr = NULL;
     clauses_get(type, &constr);
-    if(clauses_check(constr, nomeTabela)){
-	    /*
-	    str_chain_add(&str,"um");
-        str_chain_add(&str,"dois"); 
-        str_chain_clear(str);*/
-
+    int whereCl = clauses_check(constr, nomeTabela);/* (-1) Indica não presença da cláusula where */
+    if(whereCl==-1||whereCl==1){
+	
         if(!verificaNomeTabela(nomeTabela)){
             printf("\nERROR: relation \"%s\" was not found.\n\n\n", nomeTabela);
             return;
@@ -80,7 +77,10 @@ void imprimese(char nomeTabela[], char type[]){
 			for(j=0; j < objeto.qtdCampos*bufferpoll[p].nrec; j++){
 	        	if(n<(int)j/objeto.qtdCampos){
 					n++;
-					chk = checkPageLine(pagina, &objeto, bufferpoll, constr,n);
+					if(whereCl==-1)
+                                        	chk=1;
+                                        else 
+						chk = checkPageLine(pagina, &objeto, bufferpoll, constr,n);
 				}
 				if(chk){ 
 					if(pagina[j].tipoCampo == 'S')
