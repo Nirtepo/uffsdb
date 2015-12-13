@@ -367,8 +367,8 @@ int clauses_get(char type[], struct clauses ** claus){
     }return 1;
 }
 int clauses_check(struct clauses *claus, char * table){
-    if(claus==NULL){
-        printf("NULL!!!!"); return 0;}
+    if(claus==NULL)
+        return -1;/*Se for NULL significa que não possui cláusula where*/
 	if(!verificaNomeTabela(table)){
             printf("\nERROR: relation \"%s\" was not found.\n\n\n", table);
 			return 0;		
