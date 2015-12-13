@@ -310,14 +310,13 @@ column * excluirTuplaBuffer(tp_buffer *buffer, tp_table *campos, struct fs_objec
 /************************************************************************************************
 /  Natan J. Mai, Ricardo Zanuzzo e Rogério Torchelsen                                          */
 
-void imprime(char nomeTabela[] );
+void imprimese(char nomeTabela[], char type[]);
 /* ----------------------------------------------------------------------------------------------
     Objetivo:   Utilizada para impressão de tabelas.
     Parametros: Nome da tabela (char).
     Retorno:    void.
+    Type: cláusula where.
    ---------------------------------------------------------------------------------------------*/
-
-void imprimese(char nomeTabela[], char type[]);
 
 int excluirTabela(char *nomeTabela);
 /* ----------------------------------------------------------------------------------------------
@@ -545,7 +544,7 @@ void clauses_add(struct clauses **str, char *tp1, char *tb1, char *tp2, char *tb
 *Se str==NULL, cria uma nova estrutura e adiciona os valores mencionados.
 */
 
-char * substring(char type[], int from, int to);
+char * substring(char type[], int from, int to, int rm);
 /*
 * Cria uma substring do caracter from até o caracter to e remove
 * todos os espaços em branco, chamando a função rmvwhitespaces.
