@@ -30,7 +30,8 @@ int yywrap() {
         CHAR        PRIMARY     KEY         REFERENCES  DATABASE
         DROP        OBJECT      NUMBER      VALUE       QUIT
         LIST_TABLES LIST_TABLE  ALPHANUM    CONNECT     HELP
-        LIST_DBASES CLEAR	WHERE	    EXPRESSION;
+        LIST_DBASES CLEAR	WHERE	    EXPRESSION   PROJECTION
+        NATURAL     JOIN    ON;
 
 start: insert | select | create_table | create_database | drop_table | drop_database
      | table_attr | list_tables | connection | exit_program | semicolon {GLOBAL_PARSER.consoleFlag = 1; return 0;}
@@ -150,12 +151,16 @@ create_database: CREATE DATABASE {setMode(OP_CREATE_DATABASE);} OBJECT {setObjNa
 drop_database: DROP DATABASE {setMode(OP_DROP_DATABASE);} OBJECT {setObjName(yytext);} semicolon {return 0;};
 
 /* SELECT */
-select: SELECT {setMode(OP_SELECT);} asterisk FROM table_select  where_clause semicolon {return 0;}; 
+select: SELECT {setMode(OP_SELECT);} projection {printf("<%s>", *yytext);} FROM table_select join where_clause semicolon {return 0;}; 
 
 asterisk: '*'|/*optional*/;
 where_clause:  WHERE EXPRESSION {setObjType(yytext);}|/*optional*/;
 
-table_select: OBJECT {setObjName(yytext);};
+projection: asterisk|PROJECTION;
+
+table_select: OBJECT {setObjName(yytext);}; 
+
+join: JOIN OBJECT ON EXPRESSION {}|/*optional*/;
 
 /* END */
 %%
