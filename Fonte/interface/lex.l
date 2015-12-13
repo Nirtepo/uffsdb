@@ -28,6 +28,9 @@
 (?i:REFERENCES)					return REFERENCES;
 (?i:DATABASE)					return DATABASE;
 (?i:WHERE)                                              return WHERE;
+(?i:JOIN)						return JOIN;
+(?i:ON)							return ON;
+(?i:NATURAL)						return NATURAL;
 (?i:DROP)						return DROP;
 help							return HELP;
 [\\][h]							return HELP;
