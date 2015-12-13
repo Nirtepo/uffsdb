@@ -580,3 +580,8 @@ int generalCmp(char *a, char *b, char t, int comp);
 */
 int srcnum(char type[], int pos);
 /*Verifica se a posição pos da string representa um numero de 0 a 9, retorna 1 para verdadeiro */
+
+void setGlobalFields(char **type);
+/*Utilizado para variável global do select <projeção>*/
+int strtam(char n[]);
+/*Retorna o tamanho da string*/
