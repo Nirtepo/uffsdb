@@ -1,5 +1,6 @@
 //BufferPool
 #include "buffend.h"
+#include <ctype.h>
 
 /* ----------------------------------------------------------------------------------------------
     Objetivo:   Utilizada para impressão de tabelas (select * from table;).
