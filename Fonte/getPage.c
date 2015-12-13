@@ -57,60 +57,150 @@ column * getOnPageLine(column * page, struct fs_objects *objeto, tp_buffer *buff
 
 int checkPageLine(column * page, struct fs_objects *objeto, tp_buffer *bufferpool, struct clauses * claus, int n){
 	column *ret1, *ret2;
-	int *aux1, aux2;
+	int *aux1, aux2, flagv = 1, flagandor = -1;
 	while(claus!=NULL){
 		ret1 = getOnPageLine(page, objeto, bufferpool, claus->attr1, n);
 		if(claus->tab2[0]=='$'){
 			aux1 = (int *)ret1->valorCampo;
 			aux2 = atoi(claus->attr2);
-			if(claus->comp==0){			
-				if(*aux1!=aux2)
-					return 0;
+			
+			
+
+			if(claus->comp%10==0){			
+				if(flagandor == -1){
+					if(*aux1==aux2)
+					flagv = 1;
+					else flagv = 0;
+				}
+				if (flagandor == 0){				
+					flagv = flagv||(*aux1==aux2);
+				}
+				if (flagandor == 1){
+					flagv = flagv && (*aux1==aux2);
+				}
+
 			}
 			else if(claus->comp%10==1){
-				if(*aux1==aux2)
-					return 0;
+				if(flagandor == -1){
+					if(*aux1!=aux2)
+					flagv = 1;
+					else flagv = 0;
+				}
+				if (flagandor == 0){				
+					flagv = flagv||(*aux1!=aux2);
+				}
+				if (flagandor == 1){
+					flagv = flagv && (*aux1!=aux2);
+				}
 			}
 			else if(claus->comp%10==2){
-				if(*aux1<=aux2)
-					return 0;
+				if(flagandor == -1){
+					if(*aux1>aux2)
+					flagv = 1;
+					else flagv = 0;
+				}
+				if (flagandor == 0){				
+					flagv = flagv||(*aux1>aux2);
+				}
+				if (flagandor == 1){
+					flagv = flagv && (*aux1>aux2);
+				}
 			}
 			else if(claus->comp%10==3){
-				if(*aux1>=aux2)
-					return 0;
+				if(flagandor == -1){
+					if(*aux1<aux2)
+					flagv = 1;
+					else flagv = 0;
+				}
+				if (flagandor == 0){				
+					flagv = flagv||(*aux1<aux2);
+				}
+				if (flagandor == 1){
+					flagv = flagv && (*aux1<aux2);
+				}
+				
 			}
 			else if(claus->comp%10==4){
-				if(*aux1<aux2)
-					return 0;
+				if(flagandor == -1){
+					if(*aux1>=aux2)
+					flagv = 1;
+					else flagv = 0;
+				}
+				if (flagandor == 0){				
+					flagv = flagv||(*aux1>=aux2);
+				}
+				if (flagandor == 1){
+					flagv = flagv && (*aux1>=aux2);
+				}
 			}
 			else if(claus->comp%10==5){
-				if(*aux1>aux2)
-					return 0;
+				if(flagandor == -1){
+					if(*aux1<=aux2)
+					flagv = 1;
+					else flagv = 0;
+				}
+				if (flagandor == 0){				
+					flagv = flagv||(*aux1<=aux2);
+				}
+				if (flagandor == 1){
+					flagv = flagv && (*aux1<=aux2);
+				}
 			}
+
+			if (claus->comp >= 10) // 1 é and 0 é or
+				flagandor = 1;
+			else 
+				flagandor = 0;
+
+
+
 		}
 		else if(claus->tab2[0]=='@'){
-			if(!generalCmp(ret1->valorCampo, claus->attr2, 'S', claus->comp))
-				return 0;
+			if (flagandor == -1)
+				flagv = generalCmp(ret1->valorCampo, claus->attr2, 'S', claus->comp);
+			if (flagandor == 0) 
+				flagv = flagv || generalCmp(ret1->valorCampo, claus->attr2, 'S', claus->comp);
+			if (flagandor == 1)
+				flagv = flagv && generalCmp(ret1->valorCampo, claus->attr2, 'S', claus->comp);
+
 		}
 		else{
 			ret2 = getOnPageLine(page, objeto, bufferpool, claus->attr2, n);
 			if(ret1==NULL||ret2==NULL)
 				return 0; 
 			if((ret1->tipoCampo=='D'&&ret2->tipoCampo=='D')||(ret1->tipoCampo=='I'&&ret2->tipoCampo=='D')||(ret1->tipoCampo=='D'&&ret2->tipoCampo=='I')){
-				if(!generalCmp(ret1->valorCampo, ret2->valorCampo, 'D', claus->comp))
-					return 0;		
+				
+				if (flagandor == -1)
+					flagv = generalCmp(ret1->valorCampo, ret2->valorCampo, 'D', claus->comp);
+				if (flagandor == 0) 
+					flagv = flagv || generalCmp(ret1->valorCampo, ret2->valorCampo, 'D', claus->comp);
+				if (flagandor == 1)
+					flagv = flagv && generalCmp(ret1->valorCampo, ret2->valorCampo, 'D', claus->comp);		
 			}
 			else if(ret1->tipoCampo=='I'&&ret2->tipoCampo=='I'){
-				if(!generalCmp(ret1->valorCampo, ret2->valorCampo, 'I', claus->comp))
-					return 0; 
+				
+				if (flagandor == -1)
+					flagv = generalCmp(ret1->valorCampo, ret2->valorCampo, 'I', claus->comp);
+				if (flagandor == 0) 
+					flagv = flagv || generalCmp(ret1->valorCampo, ret2->valorCampo, 'I', claus->comp);
+				if (flagandor == 1)
+					flagv = flagv && generalCmp(ret1->valorCampo, ret2->valorCampo, 'I', claus->comp);	
 			}
 			else if(ret1->tipoCampo=='C'&&ret2->tipoCampo=='C'){
-				if(!generalCmp(ret1->valorCampo, ret2->valorCampo, 'C', claus->comp))
-					return 0;
+				if (flagandor == -1)
+					flagv = generalCmp(ret1->valorCampo, ret2->valorCampo, 'C', claus->comp);
+				if (flagandor == 0) 
+					flagv = flagv || generalCmp(ret1->valorCampo, ret2->valorCampo, 'C', claus->comp);
+				if (flagandor == 1)
+					flagv = flagv && generalCmp(ret1->valorCampo, ret2->valorCampo, 'C', claus->comp);
 			}
 			else if(ret1->tipoCampo=='S'&&ret2->tipoCampo=='S'){
-				if(!generalCmp(ret1->valorCampo, ret2->valorCampo, 'S', claus->comp))
-					return 0;
+				if (flagandor == -1)
+					flagv = generalCmp(ret1->valorCampo, ret2->valorCampo, 'S', claus->comp);
+				if (flagandor == 0) 
+					flagv = flagv || generalCmp(ret1->valorCampo, ret2->valorCampo, 'S', claus->comp);
+				if (flagandor == 1)
+					flagv = flagv && generalCmp(ret1->valorCampo, ret2->valorCampo, 'S', claus->comp);
 			}
 			else{
 				printf("The attributes '%s'%s and '%s'%s are incompatible", ret1->nomeCampo,(ret2->tipoCampo=='C'? "char" : (ret2->tipoCampo=='I'? "integer":(ret2->tipoCampo=='D'? "double":(ret2->tipoCampo=='S'? "string" : "unknown")))), ret2->nomeCampo, (ret2->tipoCampo=='C'? "char" : (ret2->tipoCampo=='I'? "integer":(ret2->tipoCampo=='D'? "double":(ret2->tipoCampo=='S'? "string" : "unknown")))));			
@@ -119,5 +209,5 @@ int checkPageLine(column * page, struct fs_objects *objeto, tp_buffer *bufferpoo
 		}
 		claus = claus->next;
 	}
-	return 1;
+	return flagv;
 }
