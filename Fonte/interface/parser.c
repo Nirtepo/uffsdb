@@ -56,9 +56,13 @@ void setObjType(char **type) {
 }
 
 void setGlobalFields(char **type){
-    GLOBAL_FIELDS =  *type;
-    GLOBAL_FIELDS =  substring(GLOBAL_FIELDS, 0,(int)strtam(GLOBAL_FIELDS),1);
-    GLOBAL_FIELDS[(int)strtam(GLOBAL_FIELDS)-1] ='\0';
+    if(type==NULL)
+        GLOBAL_FIELDS = NULL;
+    else{
+    	GLOBAL_FIELDS =  *type;
+    	GLOBAL_FIELDS =  substring(GLOBAL_FIELDS, 0,(int)strtam(GLOBAL_FIELDS),1);
+    	GLOBAL_FIELDS[(int)strtam(GLOBAL_FIELDS)-1] ='\0';
+    }
 }
 
 void setColumnInsert(char **nome) {
