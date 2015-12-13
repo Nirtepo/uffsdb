@@ -252,11 +252,11 @@ int clauses_get(char type[], struct clauses ** claus){
 	struct clauses * newCl = malloc(sizeof(struct clauses));
 	while(type[x]!='\0'){
 		if(type[x]=='.'){
-			newCl->tab1 = substring(type, l, x-1);
+			newCl->tab1 = substring(type, l, x-1,1);
 			l = x+1;		
 		}
 		else if(type[x]=='='||type[x]=='<'||type[x]=='!'||type[x]=='>'){
-			newCl->attr1 = substring(type, l,x-1);			
+			newCl->attr1 = substring(type, l,x-1,1);			
 			if(type[x]=='='){
 				newCl->comp = 0; 	
 				x++;
@@ -300,11 +300,11 @@ int clauses_get(char type[], struct clauses ** claus){
                 x++;
                 
             if(srcnum(type, x) == 1){
-            	newCl->tab2 = substring("$",0,0);
+            	newCl->tab2 = substring("$",0,0,1);
             	l=x;
             	while(srcnum(type,x))
             		x++;
-            	newCl->attr2 = substring(type, l, x-1);
+            	newCl->attr2 = substring(type, (type[l-1]=='-'? l-1: l), x-1,1);
             	while(isspace(type[x]))
                     x++;
             }
@@ -313,15 +313,15 @@ int clauses_get(char type[], struct clauses ** claus){
             	l=++x;
             	while(type[x] != '\'')
             		x++;
-            	newCl->tab2 = substring("@",0,0);  //  compara-se atributo com strings, @ significa string 
-            	newCl->attr2 = substring(type, l, x-1);
+            	newCl->tab2 = substring("@",0,0,1);  //  compara-se atributo com strings, @ significa string 
+            	newCl->attr2 = substring(type, l, x-1,0);
             	x++; //Pula a última apostrofe.
             	while(isspace(type[x]))
                     x++;
 	    }
                 
             if(type[x]=='.'){
-		newCl->tab2 = substring(type, l,x-1);
+		newCl->tab2 = substring(type, l,x-1,1);
                 l = ++x;				
                 while(isspace(type[x]))
                     x++;
@@ -330,7 +330,7 @@ int clauses_get(char type[], struct clauses ** claus){
                 if(type[x]!='\0'&&x<strlen(type))
                     while(isspace(type[x]))
                         x++;
-                newCl->attr2 = substring(type, l, x-1);
+                newCl->attr2 = substring(type, l, x-1,1);
             }
             
             
@@ -390,14 +390,15 @@ int clauses_check(struct clauses *claus, char * table){
     }
     return 1;
 }
-char * substring(char type[], int from, int to){
+char * substring(char type[], int from, int to, int rm){
 	to = (from<to ? to-from : from-to);
 	int i;
 	char *t = (char*)malloc(sizeof(char*)*(to+2));
 	for(i=0;i<=to;i++,from++)
 		t[i]=type[from];
     t[i]='\0';
-    rmvwhitespaces(&t);
+    if(rm)
+    	rmvwhitespaces(&t);
     return t;
 	
 }
