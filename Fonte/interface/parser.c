@@ -53,6 +53,12 @@ void setObjType(char **type) {
         GLOBAL_DATA.type[strlen(*type)] = '\0';
 }
 
+void setGlobalFields(char **type){
+    GLOBAL_FIELDS =  *type;
+    GLOBAL_FIELDS =  substring(GLOBAL_FIELDS, 0,(int)strtam(GLOBAL_FIELDS),1);
+    GLOBAL_FIELDS[(int)strtam(GLOBAL_FIELDS)-1] ='\0';
+}
+
 void setColumnInsert(char **nome) {
     GLOBAL_DATA.columnName = realloc(GLOBAL_DATA.columnName, (GLOBAL_PARSER.col_count+1)*sizeof(char *));
 
