@@ -258,7 +258,7 @@ int interface() {
                                 printf("WARNING: Nothing to be inserted. Command ignored.\n");
                             break;
                         case OP_SELECT:
-			    imprimese(GLOBAL_DATA.objName, GLOBAL_DATA.type);
+			     imprimese(GLOBAL_DATA.objName, GLOBAL_DATA.type, GLOBAL_FIELDS);
 			    break;
                         case OP_CREATE_TABLE:
                             createTable(&GLOBAL_DATA);
