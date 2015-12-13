@@ -249,9 +249,6 @@ int interface() {
                             else
                                 printf("WARNING: Nothing to be inserted. Command ignored.\n");
                             break;
-                        case OP_SELECT_ALL:
-                            imprime(GLOBAL_DATA.objName);
-                            break;
                         case OP_SELECT:
 			    imprimese(GLOBAL_DATA.objName, GLOBAL_DATA.type);
 			    break;
@@ -279,7 +276,7 @@ int interface() {
                 case OP_DROP_DATABASE:
                 case OP_CREATE_TABLE:
                 case OP_DROP_TABLE:
-                case OP_SELECT_ALL:
+                case OP_SELECT:
                 case OP_INSERT:
                     if (GLOBAL_PARSER.step == 1) {
                         GLOBAL_PARSER.consoleFlag = 0;
