@@ -14,6 +14,8 @@ rc_insert GLOBAL_DATA;
  */
 rc_parser GLOBAL_PARSER;
 
+char *GLOBAL_FIELDS; /*String que receberá todos os campos até serem iniciá-los */
+
 void connect(char *nome) {
     int r;
     r = connectDB(nome);
