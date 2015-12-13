@@ -6,7 +6,7 @@
     Parametros: Nome da tabela (char).
     Retorno:    void.
    ---------------------------------------------------------------------------------------------*/
-void imprimese(char nomeTabela[], char type[]){
+void imprimese(char nomeTabela[], char type[], char projecao[]){
 	int j,erro, x, p, cont=0, n;
     struct fs_objects objeto;
     struct clauses *constr = NULL;
@@ -112,4 +112,45 @@ void imprimese(char nomeTabela[], char type[]){
 		free(bufferpoll);
 	    free(esquema);
 	}
+}
+projCampos *setProjAttr(char projecao[]){ //joga campos na estrutura de campos da projeção
+	projCampos * strcampo, *strcamphead;
+	int x=0, l=0, flag=0;
+
+	strcampo = (projCampos*) malloc(sizeof(strcampo));
+	strcampo->next = NULL;
+	strcamphead = strcampo;
+
+	while(projecao[x]!='\0'){
+		
+		while(isspace(projecao[x])){
+		    x++; flag=1;
+		}
+		if (flag==1)
+			l=x;
+		flag = 0;
+
+		while(projecao[x]!='.')
+			x++;
+		strcampo->tabela = substring(projecao, l,x-1,1);
+		l=x+1;
+
+		while(projecao[x]!=',' && projecao[x]!='\0')
+			x++;
+
+		
+		strcampo->campo = substring(projecao, l,x-1,1);
+		if(projecao[x]==','){
+			strcampo->next = (projCampos*) malloc(sizeof(strcampo));
+			strcampo = strcampo->next;
+			strcampo->next = NULL;
+		}
+		l= ++x;
+		
+
+	}
+
+
+	return strcamphead;
+
 }
