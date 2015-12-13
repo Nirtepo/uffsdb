@@ -13,6 +13,11 @@
 #define DB_EXISTS 1
 #define DB_NOT_EXISTS 24
 
+typedef struct projCampos{ //Estrutura que recebe os campos e tabela da projeção
+    char *campo;
+    char *tabela;
+    struct projCampos *next; 
+}projCampos;
 
 struct fs_objects { // Estrutura usada para carregar fs_objects.dat
     char nome[TAMANHO_NOME_TABELA];     //  Nome da tabela.
@@ -310,7 +315,7 @@ column * excluirTuplaBuffer(tp_buffer *buffer, tp_table *campos, struct fs_objec
 /************************************************************************************************
 /  Natan J. Mai, Ricardo Zanuzzo e Rogério Torchelsen                                          */
 
-void imprimese(char nomeTabela[], char type[]);
+void imprimese(char nomeTabela[], char type[], char projecao[]);
 /* ----------------------------------------------------------------------------------------------
     Objetivo:   Utilizada para impressão de tabelas.
     Parametros: Nome da tabela (char).
@@ -585,3 +590,5 @@ void setGlobalFields(char **type);
 /*Utilizado para variável global do select <projeção>*/
 int strtam(char n[]);
 /*Retorna o tamanho da string*/
+projCampos *setProjAttr(char projecao[]);
+/*Grava campos que vem da string do yac numa lista encadeada de campos, que são os campos à imprimir*/
