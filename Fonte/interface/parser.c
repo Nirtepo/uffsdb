@@ -73,7 +73,6 @@ void setGlobalJoinTable(char **type){
     else{
         GLOBAL_JOIN_TABLE =  *type;
         GLOBAL_JOIN_TABLE=  substring(GLOBAL_JOIN_TABLE, 0,(int)strtam(GLOBAL_JOIN_TABLE),1);
-        GLOBAL_JOIN_TABLE[(int)strtam(GLOBAL_JOIN_TABLE)-1] ='\0';
     }
 }
 
@@ -83,7 +82,6 @@ void setGlobalJoinCond(char **type){
     else{
         GLOBAL_JOIN_COND =  *type;
         GLOBAL_JOIN_COND =  substring(GLOBAL_JOIN_COND, 0,(int)strtam(GLOBAL_JOIN_COND),1);
-        GLOBAL_JOIN_COND[(int)strtam(GLOBAL_JOIN_COND)-1] ='\0';
     }
 }
 

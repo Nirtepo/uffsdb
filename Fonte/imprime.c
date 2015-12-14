@@ -12,6 +12,10 @@ void imprimese(char nomeTabela[], char type[], char projecao[], char joinTab[], 
     struct fs_objects objeto;
     struct clauses *constr = NULL;
     clauses_get(type, &constr);
+    struct clauses *joinC = NULL;
+    if(joinCond!=NULL)
+    	clauses_get(joinCond, &joinC);
+
     int whereCl = clauses_check(constr, nomeTabela);/* (-1) Indica não presença da cláusula where */
     projCampos * campo;
     campo = NULL;
@@ -49,14 +53,18 @@ void imprimese(char nomeTabela[], char type[], char projecao[], char joinTab[], 
     	erro = SUCCESS;
     	for(x = 0; erro == SUCCESS; x++)
     	    erro = colocaTuplaBuffer(bufferpoll, x, esquema, objeto);
-
+    	  
     	int ntuples = --x;
         ntuples*=objeto.qtdCampos;
 		p = 0;
 		n=-1;
 		int chk;
 		while(x){
-		    column *pagina = getPage(bufferpoll, esquema, objeto, p);
+		column *pagina;
+		if(joinTab==NULL||joinCond==NULL)
+		    pagina = getPage(bufferpoll, esquema, objeto, p);
+		 else 
+		 	pagina = join (nomeTabela, joinTab, joinC, &objeto );
 		    if(pagina == ERRO_PARAMETRO){
     	        printf("ERROR: could not open the table.\n");
     	        free(bufferpoll);
@@ -65,7 +73,7 @@ void imprimese(char nomeTabela[], char type[], char projecao[], char joinTab[], 
 		    }
 
 		    if(!cont) {
-		        for(j=0; j < objeto.qtdCampos; j++){ //checkProj(char tabela[], char atributo[], projCampos * campo[])
+		        for(j=0; j < objeto.qtdCampos; j++){ 
 			        if(checkProj(nomeTabela, pagina[j].nomeCampo, campo)){  
 			            if(pagina[j].tipoCampo == 'S')
 			                printf(" %-20s ", pagina[j].nomeCampo);
@@ -91,9 +99,9 @@ void imprimese(char nomeTabela[], char type[], char projecao[], char joinTab[], 
 	        	if(n<(int)j/objeto.qtdCampos){
 					n++;
 					if(whereCl==-1)
-                                        	chk=1;
-                                        else 
-						chk = checkPageLine(pagina, &objeto, bufferpoll, constr,n);
+                    	chk=1;
+                    else 
+						chk = checkPageLine(pagina, pagina, &objeto, &objeto, bufferpoll, bufferpoll, constr,n);
 				}
 				if(chk && checkProj(nomeTabela, pagina[j].nomeCampo, campo)){ 
 					if(pagina[j].tipoCampo == 'S')
@@ -131,7 +139,7 @@ void imprimese(char nomeTabela[], char type[], char projecao[], char joinTab[], 
 	    free(esquema);
 	}
 }
-projCampos *setProjAttr(char projecao[]){ //joga campos na estrutura de campos da projeção
+projCampos *setProjAttr(char projecao[]){ //Grava campos na estrutura de campos da projeção
 	projCampos * strcampo, *strcamphead;
 	int x=0, l=0, flag=0;
 
@@ -184,3 +192,61 @@ int checkProj(char tabela[], char atributo[], projCampos * campo){
 	}
 	return 0;
 }
+
+column * join (char tab1[], char tab2[],  struct clauses *cond, struct fs_objects *objeto3 ) {
+	struct fs_objects objeto1= leObjeto(tab1);
+	struct fs_objects objeto2= leObjeto(tab2);
+	objeto3->qtdCampos=0;
+    	tp_table *esquema1 = leSchema(objeto1);
+    	tp_table *esquema2 = leSchema(objeto2);
+    	tp_buffer *buffer1 = initbuffer();
+    	tp_buffer *buffer2 = initbuffer();
+
+    	int x,y,erro = SUCCESS, p=0;
+    	for(x=0; erro==SUCCESS; x++)
+    		erro = colocaTuplaBuffer(buffer1, x, esquema1, objeto1);
+    	erro=SUCCESS;
+    	for(x=0; erro==SUCCESS; x++)
+    		erro = colocaTuplaBuffer(buffer2, x, esquema2, objeto2);
+    	column *pagina1 = getPage(buffer1, esquema1, objeto1, p); 
+    	if(pagina1 == ERRO_PARAMETRO){
+    	        printf("ERROR: could not open the table '%s'.\n", tab1);
+    	        free(buffer1);
+    	        free(esquema1);
+    	        return NULL;
+		}
+    	column *pagina2 = getPage(buffer2, esquema2, objeto2, p); //copia o buffer pra pagina
+    	if(pagina2 == ERRO_PARAMETRO){
+    	        printf("ERROR: could not open the table '%s'.\n", tab2);
+    	        free(buffer2);
+    	        free(esquema2);
+    	        return NULL;
+		}	
+    	column *pagina3= (column *)malloc(sizeof(column)*(objeto2.qtdCampos+objeto1.qtdCampos)*(buffer1[p].nrec+buffer2[p].nrec));
+    	int k=0, i, pag=0, pagv1=0, pagv2=0;
+    	for(x=0; x < objeto1.qtdCampos; x++){ 
+    		for(y=0; y < objeto2.qtdCampos; y++){
+    			if(checkPageLine(pagina1,pagina2, &objeto1, &objeto2, buffer1, buffer2, cond,pag++)){
+    				for(i=0; i<objeto1.qtdCampos; pagv1++, k++,i++)
+    					pagina3[k]=pagina1[pagv1];
+    				for(i=0; i<objeto2.qtdCampos; pagv2++, k++,i++)
+    					pagina3[k]=pagina2[pagv2];
+    				if(objeto3->qtdCampos==0)
+    					objeto3->qtdCampos=k;
+    			}
+    		}
+
+    	} 
+    	if(k>0)
+    		return pagina3;
+    	else
+    		return NULL;
+    	//column *pagina3, pag3Ini=NULL;
+    	/*for(x=0; x < objeto1.qtdCampos*buffer1[p].nrec; x++)
+    		printf("1)%s:%s\n", pagina1[x].nomeCampo, pagina1[x].valorCampo);
+    	for(x=0; x < objeto2.qtdCampos*buffer2[p].nrec; x++)
+    		printf("2)%s:%s\n", pagina2[x].nomeCampo, pagina2[x].valorCampo);return NULL;*/
+
+
+}
+

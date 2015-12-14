@@ -361,8 +361,10 @@ Componente Curricular: Banco de Dados II
 Professor: Dr. Denio Duarte
 Alunos: Guilherme Antunes da Silva e Renan Roberto Rogoski.
 =============================================================================================================================================
+**Compilar** -> Digitar apenas <make> pelo terminal na pasta uffsdb/Fonte/interface/ e depois <make> na pasta uffsdb/Fonte/
+**Executar** -> Pelo terminal execute ./Ibetres em uffsdb/Fonte/
 
-Além das funcionalidades anteriormente Citadas e Implementadas =>
+Além das funcionalidades anteriormente Citadas e Implementadas pelos outros grupos =>
 Implementação de novas funcionalidades no SELECT das Tabelas:
 
 *Projeção* -> É possível fazer: 
@@ -374,6 +376,10 @@ SELECT <tabela.campo1>, <tabela.campo3>, <tabela.campoN> FROM <tabela>;
 desejadas usando os operadores AND e/ou OR: 
 SELECT <tabela.campo1>, <tabela.campo3> FROM <tabela> WHERE <tabela.campo2> != 0 OR <tabela.campo3> = 'Fulano' AND <tabela.campo1> = 1;
 SELECT <tabela.campo1>, <tabela.campo3> FROM <tabela> WHERE <tabela.campo2> = <tabela.campo1> OR <tabela.campo3> = 'Fulano';
+
+*Junção* -> Implementao reconhecimeto da sintaxe do JOIN ON e NATURAL JOIN. Criadas funções para funcionamento do JOIN ON, porém está com problemas
+, ainda não retornando a pagina do join com as tuplas totalmente corretas:
+SELECT <tabela.campo1>, <tabela.campo3>, <tabelaB.campo2> FROM <tabela> JOIN <tabelaB> ON <tabela.campo1> = <tabelaB.campo1>; 
 
 ##---Novas Estruturas-------------##
 ------------------------------------
@@ -427,6 +433,13 @@ Procura pelo atributo na tabela em questão e retorna o seu valor.
 
 ------------------------------------
 
+int checkPageLine(column * page1, column *page2, struct fs_objects *objeto1, struct fs_objects *objeto2, tp_buffer *bufferpool1, tp_buffer *bufferpool2, struct clauses * claus, int n);
+
+Testa a cláusula WHERE, guardada na estrutura clauses, para decidir se a linha p da página deve ser exibida.
+Retorna 1 para sim e 0 para não.
+
+------------------------------------
+
 int generalCmp(char *a, char *b, char t, int comp);
 
 Faz uma comparação genérica entre tipos I, D, C e S, retornando 1 para sim e 0 para não.
@@ -440,4 +453,10 @@ int srcnum(char type[], int pos);
 Verifica se a posição pos da string representa um numero de 0 a 9, retorna 1 para verdadeiro
 
 ------------------------------------
+
+column * join (char tab1[], char tab2[],  struct clauses *cond, struct fs_objects *objeto3 );
+
+Cria uma nova página com as tuplas do Join on 
+
+------------------------------------ 
 

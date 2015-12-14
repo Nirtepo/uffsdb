@@ -55,11 +55,13 @@ column * getOnPageLine(column * page, struct fs_objects *objeto, tp_buffer *buff
 	return NULL;
 }
 
-int checkPageLine(column * page, struct fs_objects *objeto, tp_buffer *bufferpool, struct clauses * claus, int n){
+int checkPageLine(column * page1, column *page2, struct fs_objects *objeto1, struct fs_objects *objeto2, tp_buffer *bufferpool1, tp_buffer *bufferpool2, struct clauses * claus, int n){
 	column *ret1, *ret2;
 	int *aux1, aux2, flagv = 1, flagandor = -1;
 	while(claus!=NULL){
-		ret1 = getOnPageLine(page, objeto, bufferpool, claus->attr1, n);
+		ret1 = getOnPageLine(page1, objeto1, bufferpool1, claus->attr1, n);
+		if (ret1 ==NULL);
+			ret1 = getOnPageLine(page2, objeto2, bufferpool2, claus->attr1, n);
 		if(claus->tab2[0]=='$'){
 			aux1 = (int *)ret1->valorCampo;
 			aux2 = atoi(claus->attr2);
@@ -158,9 +160,12 @@ int checkPageLine(column * page, struct fs_objects *objeto, tp_buffer *bufferpoo
 
 		}
 		else{
-			ret2 = getOnPageLine(page, objeto, bufferpool, claus->attr2, n);
-			if(ret1==NULL||ret2==NULL)
+			ret2 = getOnPageLine(page1, objeto1, bufferpool1, claus->attr2, n);
+			if(ret2==NULL)
+				ret2 = getOnPageLine(page2, objeto2, bufferpool2, claus->attr2, n);
+			if(ret1==NULL||ret2==NULL){
 				return 0; 
+			}
 			if((ret1->tipoCampo=='D'&&ret2->tipoCampo=='D')||(ret1->tipoCampo=='I'&&ret2->tipoCampo=='D')||(ret1->tipoCampo=='D'&&ret2->tipoCampo=='I')){
 				
 				if (flagandor == -1)

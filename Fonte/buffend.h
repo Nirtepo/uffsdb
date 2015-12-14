@@ -315,7 +315,7 @@ column * excluirTuplaBuffer(tp_buffer *buffer, tp_table *campos, struct fs_objec
 /************************************************************************************************
 /  Natan J. Mai, Ricardo Zanuzzo e Rogério Torchelsen                                          */
 
-void imprimese(char nomeTabela[], char type[], char projecao[] , char joinTab[], char joinCond[]);
+void imprimese(char nomeTabela[], char type[], char projecao[], char joinTab[], char joinCond[]);
 /* ----------------------------------------------------------------------------------------------
     Objetivo:   Utilizada para impressão de tabelas.
     Parametros: Nome da tabela (char).
@@ -567,7 +567,7 @@ int clauses_check(struct clauses *claus, char * table);
 
 //char* strdepoint(char **c1);
 
-int checkPageLine(column * page, struct fs_objects *objeto, tp_buffer *bufferpool, struct clauses * claus, int p);
+int checkPageLine(column * page1, column *page2, struct fs_objects *objeto1, struct fs_objects *objeto2, tp_buffer *bufferpool1, tp_buffer *bufferpool2, struct clauses * claus, int n);
 /*
 * Testa a cláusula WHERE, guardada na estrutura clauses, para decidir se a linha p da página deve ser exibida.
   Retorna 1 para sim e 0 para não.
@@ -593,5 +593,7 @@ int strtam(char n[]);
 projCampos *setProjAttr(char projecao[]);
 /*Grava campos que vem da string do yac numa lista encadeada de campos, que são os campos à imprimir*/
 int checkProj(char tabela[], char atributo[], projCampos * campo);
-void setGlobalJoinTable(char **type);
+
 void setGlobalJoinCond(char **type);
+void setGlobalJoinTable(char **type);
+column * join (char tab1[], char tab2[],  struct clauses *cond, struct fs_objects *objeto3 ) ;
