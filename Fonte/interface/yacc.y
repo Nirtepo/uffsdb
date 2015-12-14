@@ -151,7 +151,7 @@ create_database: CREATE DATABASE {setMode(OP_CREATE_DATABASE);} OBJECT {setObjNa
 drop_database: DROP DATABASE {setMode(OP_DROP_DATABASE);} OBJECT {setObjName(yytext);} semicolon {return 0;};
 
 /* SELECT */
-select: SELECT {setMode(OP_SELECT);} projection  FROM table_select where_clause semicolon {return 0;}; 
+select: SELECT {setMode(OP_SELECT);} projection  FROM table_select join where_clause semicolon {return 0;}; 
 
 asterisk: '*'|/*optional*/;
 where_clause:  WHERE EXPRESSION {setObjType(yytext);}|/*optional*/;
@@ -160,7 +160,7 @@ projection: asterisk{setGlobalFields(NULL);}|PROJECTION{setGlobalFields(yytext);
 
 table_select: OBJECT {setObjName(yytext);}; 
 
-/*join: JOIN OBJECT ON EXPRESSION {}|optional*/;
+join: JOIN OBJECT{setGlobalJoinTable(yytext);} ON EXPRESSION {setGlobalJoinCond(yytext);}|/*optional*/{setGlobalJoinTable(NULL); setGlobalJoinCond(NULL);}| NATURAL JOIN OBJECT{setGlobalJoinTable(yytext); setGlobalJoinCond(NULL);};
 
 /* END */
 %%

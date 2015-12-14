@@ -14,7 +14,9 @@ rc_insert GLOBAL_DATA;
  */
 rc_parser GLOBAL_PARSER;
 
-char *GLOBAL_FIELDS; /*String que receberá todos os campos até serem iniciá-los */
+char *GLOBAL_FIELDS, *GLOBAL_JOIN_TABLE, *GLOBAL_JOIN_COND; 
+/*Strings que receberão respectivamente todos os campos até serem iniciá-los e toda a cláusula join */
+
 
 void connect(char *nome) {
     int r;
@@ -59,9 +61,29 @@ void setGlobalFields(char **type){
     if(type==NULL)
         GLOBAL_FIELDS = NULL;
     else{
-    	GLOBAL_FIELDS =  *type;
-    	GLOBAL_FIELDS =  substring(GLOBAL_FIELDS, 0,(int)strtam(GLOBAL_FIELDS),1);
-    	GLOBAL_FIELDS[(int)strtam(GLOBAL_FIELDS)-1] ='\0';
+        GLOBAL_FIELDS =  *type;
+        GLOBAL_FIELDS =  substring(GLOBAL_FIELDS, 0,(int)strtam(GLOBAL_FIELDS),1);
+        GLOBAL_FIELDS[(int)strtam(GLOBAL_FIELDS)-1] ='\0';
+    }
+}
+
+void setGlobalJoinTable(char **type){
+    if(type==NULL)
+        GLOBAL_JOIN_TABLE = NULL;
+    else{
+        GLOBAL_JOIN_TABLE =  *type;
+        GLOBAL_JOIN_TABLE=  substring(GLOBAL_JOIN_TABLE, 0,(int)strtam(GLOBAL_JOIN_TABLE),1);
+        GLOBAL_JOIN_TABLE[(int)strtam(GLOBAL_JOIN_TABLE)-1] ='\0';
+    }
+}
+
+void setGlobalJoinCond(char **type){
+    if(type==NULL)
+        GLOBAL_JOIN_COND = NULL;
+    else{
+        GLOBAL_JOIN_COND =  *type;
+        GLOBAL_JOIN_COND =  substring(GLOBAL_JOIN_COND, 0,(int)strtam(GLOBAL_JOIN_COND),1);
+        GLOBAL_JOIN_COND[(int)strtam(GLOBAL_JOIN_COND)-1] ='\0';
     }
 }
 
@@ -262,7 +284,7 @@ int interface() {
                                 printf("WARNING: Nothing to be inserted. Command ignored.\n");
                             break;
                         case OP_SELECT:
-			     imprimese(GLOBAL_DATA.objName, GLOBAL_DATA.type, GLOBAL_FIELDS);
+			     imprimese(GLOBAL_DATA.objName, GLOBAL_DATA.type, GLOBAL_FIELDS, GLOBAL_JOIN_TABLE, GLOBAL_JOIN_COND);
 			    break;
                         case OP_CREATE_TABLE:
                             createTable(&GLOBAL_DATA);

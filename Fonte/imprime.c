@@ -7,12 +7,19 @@
     Parametros: Nome da tabela (char).
     Retorno:    void.
    ---------------------------------------------------------------------------------------------*/
-void imprimese(char nomeTabela[], char type[], char projecao[]){
+void imprimese(char nomeTabela[], char type[], char projecao[], char joinTab[], char joinCond[]){
 	int j,erro, x, p, cont=0, n;
     struct fs_objects objeto;
     struct clauses *constr = NULL;
     clauses_get(type, &constr);
     int whereCl = clauses_check(constr, nomeTabela);/* (-1) Indica não presença da cláusula where */
+    projCampos * campo;
+    campo = NULL;
+
+    if(projecao!=NULL)
+    	campo = setProjAttr(projecao);
+
+
     if(whereCl==-1||whereCl==1){
 	
         if(!verificaNomeTabela(nomeTabela)){
@@ -58,19 +65,23 @@ void imprimese(char nomeTabela[], char type[], char projecao[]){
 		    }
 
 		    if(!cont) {
-		        for(j=0; j < objeto.qtdCampos; j++){
-		            if(pagina[j].tipoCampo == 'S')
-		                printf(" %-20s ", pagina[j].nomeCampo);
-		        	else
-		                printf(" %-10s ", pagina[j].nomeCampo);
-		            if(j<objeto.qtdCampos-1)
-		            	printf("|");
+		        for(j=0; j < objeto.qtdCampos; j++){ //checkProj(char tabela[], char atributo[], projCampos * campo[])
+			        if(checkProj(nomeTabela, pagina[j].nomeCampo, campo)){  
+			            if(pagina[j].tipoCampo == 'S')
+			                printf(" %-20s ", pagina[j].nomeCampo);
+			        	else
+			                printf(" %-10s ", pagina[j].nomeCampo);
+			            if(j<objeto.qtdCampos-1)
+			            	printf("|");
+			        }
 		        }
 		        printf("\n");
 		        for(j=0; j < objeto.qtdCampos; j++){
-		            printf("%s",(pagina[j].tipoCampo == 'S')? "----------------------": "------------");
-		            if(j<objeto.qtdCampos-1)
-		            	printf("+");
+		            if(checkProj(nomeTabela, pagina[j].nomeCampo, campo)){
+		            	printf("%s",(pagina[j].tipoCampo == 'S')? "----------------------": "------------");
+		            	if(j<objeto.qtdCampos-1)
+		            		printf("+");
+		            }
 		        }
 		        printf("\n");
 		    }
@@ -84,7 +95,7 @@ void imprimese(char nomeTabela[], char type[], char projecao[]){
                                         else 
 						chk = checkPageLine(pagina, &objeto, bufferpoll, constr,n);
 				}
-				if(chk){ 
+				if(chk && checkProj(nomeTabela, pagina[j].nomeCampo, campo)){ 
 					if(pagina[j].tipoCampo == 'S')
 		 	           	printf(" %-20s ", pagina[j].valorCampo);
 		        	else if(pagina[j].tipoCampo == 'I'){
@@ -98,13 +109,19 @@ void imprimese(char nomeTabela[], char type[], char projecao[]){
 		            	double *n = (double *)&pagina[j].valorCampo[0];
 		    	        printf(" %-10f ", *n);
 		        	}
-	            	if(j>=1 && ((j+1)%objeto.qtdCampos)==0)
-            			printf("\n");
-        			else
-        				printf("|");
+	            	
 				}
-				else
-                                	ntuples--;
+				
+
+                if(chk){
+					if(j>=1 && ((j+1)%objeto.qtdCampos)==0)
+	            			printf("\n");
+	        			else if (checkProj(nomeTabela, pagina[j].nomeCampo, campo))
+	        				printf("|");
+	        	}else
+                	ntuples--;
+
+				
     		}
 			x-=bufferpoll[p++].nrec;
 		}
@@ -154,4 +171,16 @@ projCampos *setProjAttr(char projecao[]){ //joga campos na estrutura de campos d
 
 	return strcamphead;
 
+}
+
+int checkProj(char tabela[], char atributo[], projCampos * campo){
+	if (campo == NULL )
+		return 1;
+	while(campo!=NULL){
+		if(strcmp(tabela,campo->tabela)==0 && strcmp(atributo,campo->campo)==0){
+			return 1; 
+		}
+		campo = campo->next;
+	}
+	return 0;
 }

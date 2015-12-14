@@ -315,7 +315,7 @@ column * excluirTuplaBuffer(tp_buffer *buffer, tp_table *campos, struct fs_objec
 /************************************************************************************************
 /  Natan J. Mai, Ricardo Zanuzzo e Rogério Torchelsen                                          */
 
-void imprimese(char nomeTabela[], char type[], char projecao[]);
+void imprimese(char nomeTabela[], char type[], char projecao[] , char joinTab[], char joinCond[]);
 /* ----------------------------------------------------------------------------------------------
     Objetivo:   Utilizada para impressão de tabelas.
     Parametros: Nome da tabela (char).
@@ -592,3 +592,6 @@ int strtam(char n[]);
 /*Retorna o tamanho da string*/
 projCampos *setProjAttr(char projecao[]);
 /*Grava campos que vem da string do yac numa lista encadeada de campos, que são os campos à imprimir*/
+int checkProj(char tabela[], char atributo[], projCampos * campo);
+void setGlobalJoinTable(char **type);
+void setGlobalJoinCond(char **type);
