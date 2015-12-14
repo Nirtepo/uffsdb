@@ -353,17 +353,91 @@ Os comandos SQL e os objetos das relações (i.e. <NomeTabelas>, <NomeCampos> ..
 
 ##############LEIA-ME PARTE 5 #############################################################################################################
 
-=> 26 de novembro de 2015 <=
+=> 14 de Dezembro de 2015 <=
 
 Universidade Federal da Fronteira Sul – UFFS
 Curso: Ciência da Computação
 Componente Curricular: Banco de Dados II
 Professor: Dr. Denio Duarte
-Aluno: Guilherme Antunes da Silva.
+Alunos: Guilherme Antunes da Silva e Renan Roberto Rogoski.
 =============================================================================================================================================
-Foi alterada o comando select para permitir a cláusula where, contudo:
-*Ainda não há projeções
-*Não colocar asterisco se for usar where. Mas se for select sem where, colocar asterisco.
-*Não use valores numéricos. ex: select where t.e>=2;
 
-Problemas graves, mas que estão sendo corrigidos.
+Além das funcionalidades anteriormente Citadas e Implementadas =>
+Implementação de novas funcionalidades no SELECT das Tabelas:
+
+*Projeção* -> É possível fazer: 
+SELECT * FROM <tabela>;
+Escolher quais campos são exibidos: 
+SELECT <tabela.campo1>, <tabela.campo3>, <tabela.campoN> FROM <tabela>;
+
+*Seleção* -> É possível fazer projeção dos campos desejados ou todos campos com "select *" e usar a clausula WHERE para selecionar as tuplas
+desejadas usando os operadores AND e/ou OR: 
+SELECT <tabela.campo1>, <tabela.campo3> FROM <tabela> WHERE <tabela.campo2> != 0 OR <tabela.campo3> = 'Fulano' AND <tabela.campo1> = 1;
+SELECT <tabela.campo1>, <tabela.campo3> FROM <tabela> WHERE <tabela.campo2> = <tabela.campo1> OR <tabela.campo3> = 'Fulano';
+
+##---Novas Estruturas-------------##
+------------------------------------
+Estrutura usada gravar as clausulas do where enviadas pelo interpretador. Quanto mais operadores AND ou OR forem usados mais nodos Clauses serão
+encadeados para as comparações. A variável int comp tem um código diferente para cada comparador.
+
+typedef struct clauses {//Usada para a cláusula where, no arquivo imprime.c
+	char * attr1, *tab1, * attr2, *tab2;
+	int comp;//0 =, 1 !=, 2 >, 3 <, 4 >=, 5 <=, +0 or, +10 and 
+	struct clauses *next;
+}clauses;
+
+------------------------------------
+
+Estrutura usada para gravar o nome e tabela do campo digitado no select para projeção para saber o que imprimir na tela.
+Usada na função projCampos *setProjAttr(char projecao[]); que encadeia os campos da projeção.
+
+typedef struct projCampos{ //Estrutura que recebe os campos e tabela da projeção
+    char *campo;
+    char *tabela;
+    struct projCampos *next; 
+}projCampos;
+
+-------------------------------------
+
+##---Novas Funções Importantes-----##
+
+int clauses_get(char type[], struct clauses ** claus);
+
+Preenche uma estrutura do tipo clauses com o conteúdo de uma string do tipo CLAUSE.
+ex: op>2 and abra.c<=r.rio;S
+
+-------------------------------------
+
+char * substring(char type[], int from, int to, int rm);
+
+Cria uma substring do caracter from até o caracter to e remove
+todos os espaços em branco, chamando a função rmvwhitespaces.
+
+------------------------------------
+
+int clauses_check(struct clauses *claus, char * table);
+
+Verifica em uma estrutura clauses se o nome das tabelas utilizadas na clausula where do select são válidos.
+
+------------------------------------
+
+column * getOnPageLine(column * page, struct fs_objects *objeto, tp_buffer *bufferpool, char * attr, int n);
+
+Procura pelo atributo na tabela em questão e retorna o seu valor.
+
+------------------------------------
+
+int generalCmp(char *a, char *b, char t, int comp);
+
+Faz uma comparação genérica entre tipos I, D, C e S, retornando 1 para sim e 0 para não.
+O tipo da comparação é definida em comp, pelo número correspondente. Essa numeração
+pode ser conferida no cabeçalho deste arquivo, na definição da struct clauses.
+
+------------------------------------
+
+int srcnum(char type[], int pos);
+
+Verifica se a posição pos da string representa um numero de 0 a 9, retorna 1 para verdadeiro
+
+------------------------------------
+
