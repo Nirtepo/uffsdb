@@ -54,8 +54,7 @@ void imprimese(char nomeTabela[], char type[], char projecao[], char joinTab[], 
     	for(x = 0; erro == SUCCESS; x++)
     	    erro = colocaTuplaBuffer(bufferpoll, x, esquema, objeto);
     	  
-    	int ntuples = --x;
-        ntuples*=objeto.qtdCampos;
+    	int ntuples = --x*-1;
 		p = 0;
 		n=-1;
 		int chk;
@@ -71,6 +70,8 @@ void imprimese(char nomeTabela[], char type[], char projecao[], char joinTab[], 
     	        free(esquema);
     	        return;
 		    }
+		if(ntuples<0)
+		    	ntuples*=objeto.qtdCampos*-1;
 
 		    if(!cont) {
 		        for(j=0; j < objeto.qtdCampos; j++){ 
