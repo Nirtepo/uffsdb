@@ -28,15 +28,9 @@
 (?i:REFERENCES)					return REFERENCES;
 (?i:DATABASE)					return DATABASE;
 (?i:WHERE)                                              return WHERE;
-<<<<<<< HEAD
 (?i:JOIN)			return JOIN;
 (?i:ON)			return ON;
 (?i:NATURAL)		return NATURAL;
-=======
-(?i:JOIN)						return JOIN;
-(?i:ON)							return ON;
-(?i:NATURAL)						return NATURAL;
->>>>>>> origin/master
 (?i:DROP)						return DROP;
 help							return HELP;
 [\\][h]							return HELP;
