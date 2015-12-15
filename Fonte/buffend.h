@@ -596,4 +596,4 @@ int checkProj(char tabela[], char atributo[], projCampos * campo);
 
 void setGlobalJoinCond(char **type);
 void setGlobalJoinTable(char **type);
-column * join (char tab1[], char tab2[],  struct clauses *cond, struct fs_objects *objeto3 ) ;
+column * join (char tab1[], char tab2[],  struct clauses *cond, struct fs_objects *objeto3, int *ntuples ) ;
