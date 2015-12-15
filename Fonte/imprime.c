@@ -63,7 +63,7 @@ void imprimese(char nomeTabela[], char type[], char projecao[], char joinTab[], 
 		if(joinTab==NULL||joinCond==NULL)
 		    pagina = getPage(bufferpoll, esquema, objeto, p);
 		 else 
-		 	pagina = join (nomeTabela, joinTab, joinC, &objeto );
+		 	pagina = join (nomeTabela, joinTab, joinC, &objeto, &ntuples );
 		    if(pagina == ERRO_PARAMETRO){
     	        printf("ERROR: could not open the table.\n");
     	        free(bufferpoll);
@@ -194,7 +194,7 @@ int checkProj(char tabela[], char atributo[], projCampos * campo){
 	return 0;
 }
 
-column * join (char tab1[], char tab2[],  struct clauses *cond, struct fs_objects *objeto3 ) {
+column * join (char tab1[], char tab2[],  struct clauses *cond, struct fs_objects *objeto3, int *ntuples ) {
 	struct fs_objects objeto1= leObjeto(tab1);
 	struct fs_objects objeto2= leObjeto(tab2);
 	objeto3->qtdCampos=0;
@@ -224,7 +224,7 @@ column * join (char tab1[], char tab2[],  struct clauses *cond, struct fs_object
     	        return NULL;
 	}	
     	column *pagina3= (column *)malloc(sizeof(column)*(objeto2.qtdCampos+objeto1.qtdCampos)*(buffer1[p].nrec+buffer2[p].nrec));
-    	int k=0, i, pag=0;
+    	int k=0, i, pag=0, ntuplesAux=0;
     	for(x=0; x < buffer1[p].nrec; x++){ 
     		for(y=0; y < buffer2[p].nrec; y++){
     			if(checkPageLine(pagina1,pagina2, &objeto1, &objeto2, buffer1, buffer2, cond,pag++)){
@@ -235,9 +235,12 @@ column * join (char tab1[], char tab2[],  struct clauses *cond, struct fs_object
     				if(objeto3->qtdCampos==0)
     					objeto3->qtdCampos=k;
     			}
+    			else
+    				ntuplesAux++;
     		}
 
     	} 
+    	*ntuples += (int)ntuplesAux/objeto3->qtdCampos;
     	if(k>0)
     		return pagina3;
     	else
