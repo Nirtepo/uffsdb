@@ -215,23 +215,23 @@ column * join (char tab1[], char tab2[],  struct clauses *cond, struct fs_object
     	        free(buffer1);
     	        free(esquema1);
     	        return NULL;
-		}
+	}
     	column *pagina2 = getPage(buffer2, esquema2, objeto2, p); //copia o buffer pra pagina
     	if(pagina2 == ERRO_PARAMETRO){
     	        printf("ERROR: could not open the table '%s'.\n", tab2);
     	        free(buffer2);
     	        free(esquema2);
     	        return NULL;
-		}	
+	}	
     	column *pagina3= (column *)malloc(sizeof(column)*(objeto2.qtdCampos+objeto1.qtdCampos)*(buffer1[p].nrec+buffer2[p].nrec));
-    	int k=0, i, pag=0, pagv1=0, pagv2=0;
-    	for(x=0; x < objeto1.qtdCampos; x++){ 
-    		for(y=0; y < objeto2.qtdCampos; y++){
+    	int k=0, i, pag=0;
+    	for(x=0; x < buffer1[p].nrec; x++){ 
+    		for(y=0; y < buffer2[p].nrec; y++){
     			if(checkPageLine(pagina1,pagina2, &objeto1, &objeto2, buffer1, buffer2, cond,pag++)){
-    				for(i=0; i<objeto1.qtdCampos; pagv1++, k++,i++)
-    					pagina3[k]=pagina1[pagv1];
-    				for(i=0; i<objeto2.qtdCampos; pagv2++, k++,i++)
-    					pagina3[k]=pagina2[pagv2];
+    				for(i=0; i<objeto1.qtdCampos;  k++,i++)
+    					pagina3[k]=pagina1[(pag-1)*objeto1.qtdCampos+i];
+    				for(i=0; i<objeto2.qtdCampos; k++,i++)
+    					pagina3[k]=pagina2[(pag-1)*objeto2.qtdCampos+i];
     				if(objeto3->qtdCampos==0)
     					objeto3->qtdCampos=k;
     			}
@@ -242,12 +242,5 @@ column * join (char tab1[], char tab2[],  struct clauses *cond, struct fs_object
     		return pagina3;
     	else
     		return NULL;
-    	//column *pagina3, pag3Ini=NULL;
-    	/*for(x=0; x < objeto1.qtdCampos*buffer1[p].nrec; x++)
-    		printf("1)%s:%s\n", pagina1[x].nomeCampo, pagina1[x].valorCampo);
-    	for(x=0; x < objeto2.qtdCampos*buffer2[p].nrec; x++)
-    		printf("2)%s:%s\n", pagina2[x].nomeCampo, pagina2[x].valorCampo);return NULL;*/
-
-
 }
 
