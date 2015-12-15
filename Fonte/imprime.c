@@ -240,7 +240,7 @@ column * join (char tab1[], char tab2[],  struct clauses *cond, struct fs_object
     		}
 
     	} 
-    	*ntuples += (int)ntuplesAux/objeto3->qtdCampos;
+    	//*ntuples += (int)ntuplesAux/objeto3->qtdCampos;não funcionou
     	if(k>0)
     		return pagina3;
     	else
